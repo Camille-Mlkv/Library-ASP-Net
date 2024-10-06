@@ -9,13 +9,18 @@
 
 <div>
     <h4>Book</h4>
-    <hr />
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Book.Title)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Book.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Book.Author)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Book.Author)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Book.Description)
@@ -38,15 +43,9 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Book.Image)
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.Image)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.ImageMimeType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.ImageMimeType)
-        </dd>
+        <td>
+            <img src="@Model.Book.Image" alt="Картинка книги" style="width: 300px; height: auto;" />
+        </td>
     </dl>
 </div>
 <div>

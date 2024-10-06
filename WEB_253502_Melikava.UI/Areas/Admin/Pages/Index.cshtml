@@ -6,6 +6,9 @@
 }
 
 <h1>Collection</h1>
+<a href="@Url.Page("/Create")" class="btn btn-primary">
+    <i class="bi bi-plus"></i> Create
+</a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -27,16 +30,20 @@
                     <img src="@book.Image" alt="Картинка книги" style="max-width: 100px; max-height: 150px;" />
                 </td>
                 <td>
-                    <a href="@Url.Page("/Edit", new { id = book.Id })" class="btn btn-primary">
-                        <i class="bi bi-pencil"></i> Edit
-                    </a>
-                    <a href="@Url.Page("/Details", new { id = book.Id })" class="btn btn-info">
-                        <i class="bi bi-info-circle"></i> Details
-                    </a>
-                    <a href="@Url.Page("/Delete", new { id = book.Id })" class="btn btn-danger">
-                        <i class="bi bi-trash"></i> Delete
-                    </a>
+                    <div class="d-flex gap-2">
+                        <a href="@Url.Page("/Edit", new { id = book.Id })" class="btn btn-primary d-flex align-items-center">
+                            <i class="bi bi-pencil me-1"></i> Edit
+                        </a>
+                        <a href="@Url.Page("/Details", new { id = book.Id })" class="btn btn-info d-flex align-items-center">
+                            <i class="bi bi-info-circle me-1"></i> Details
+                        </a>
+                        <a href="@Url.Page("/Delete", new { id = book.Id })" class="btn btn-danger d-flex align-items-center">
+                            <i class="bi bi-trash me-1"></i> Delete
+                        </a>
+                    </div>
                 </td>
+
+
             </tr>
         }
     </tbody>

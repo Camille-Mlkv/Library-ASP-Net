@@ -36,6 +36,7 @@ namespace WEB_253502_Melikava.UI.Areas.Admin.Pages
             {
                 Book = book;
             }
+            
             return Page();
         }
     }

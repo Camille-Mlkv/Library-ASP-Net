@@ -2,6 +2,7 @@ using WEB_253502_Melikava.UI;
 using WEB_253502_Melikava.UI.Extensions;
 using WEB_253502_Melikava.UI.Services.API;
 using WEB_253502_Melikava.UI.Services.BookService;
+using WEB_253502_Melikava.UI.Services.FileService;
 using WEB_253502_Melikava.UI.Services.GenreService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.RegisterCustomServices();
 UriData.ApiUri = builder.Configuration["UriData:ApiUri"];
 builder.Services.AddHttpClient<IBookService, ApiBookService>(opt => opt.BaseAddress = new Uri(UriData.ApiUri));
 builder.Services.AddHttpClient<IGenreService,ApiGenreService>(opt=>opt.BaseAddress=new Uri(UriData.ApiUri));
+builder.Services.AddHttpClient<IFileService, ApiFileService>(opt =>opt.BaseAddress = new Uri($"{UriData.ApiUri}Files"));
+
 builder.Services.AddRazorPages();
 var app = builder.Build();
 

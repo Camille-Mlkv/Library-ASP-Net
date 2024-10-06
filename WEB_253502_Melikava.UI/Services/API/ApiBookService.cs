@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿ using Newtonsoft.Json;
 using System;
 using System.Drawing.Printing;
 using System.Net.Http.Json;
@@ -7,6 +7,7 @@ using System.Text.Json;
 using WEB_253502_Melikava.Domain.Entities;
 using WEB_253502_Melikava.Domain.Models;
 using WEB_253502_Melikava.UI.Services.BookService;
+using WEB_253502_Melikava.UI.Services.FileService;
 
 namespace WEB_253502_Melikava.UI.Services.API
 {
@@ -16,7 +17,8 @@ namespace WEB_253502_Melikava.UI.Services.API
         private string _pageSize;
         private JsonSerializerOptions _serializerOptions;
         private ILogger<ApiBookService> _logger;
-        public ApiBookService(HttpClient httpClient,IConfiguration configuration, ILogger<ApiBookService> logger)
+        private readonly IFileService _fileService;
+        public ApiBookService(HttpClient httpClient,IConfiguration configuration, ILogger<ApiBookService> logger,IFileService fileService)
         {
             _httpClient = httpClient;
             _pageSize = configuration.GetSection("ItemsPerPage").Value;
@@ -25,22 +27,18 @@ namespace WEB_253502_Melikava.UI.Services.API
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
             _logger = logger;
+            _fileService = fileService;
         }
 
-        //https://localhost:7002/api/Books?pageNo=1&pageSize=3
-        //https://localhost:7002/api/Books?genre=classic&pageNo=1&pageSize=3
         public async Task<ResponseData<BookListModel<Book>>> GetProductListAsync(string? categoryNormalizedName, int pageNo = 1)
         {
-            // подготовка URL запроса
             var urlString = new StringBuilder($"{_httpClient.BaseAddress.AbsoluteUri}Books?");
-            // добавить категорию в маршрут
             if (categoryNormalizedName != null)
             {
                 urlString.Append($"&genre={categoryNormalizedName}");
             }
             urlString.Append($"&pageNo={pageNo}&pageSize={_pageSize}");
 
-            // отправить запрос к API
             var response = await _httpClient.GetAsync(new Uri(urlString.ToString()));
 
             if (response.IsSuccessStatusCode)
@@ -61,10 +59,19 @@ namespace WEB_253502_Melikava.UI.Services.API
 
         }
 
-        //https://localhost:7002/api/Books
-        public async Task<ResponseData<Book>> CreateProductAsync(Book book, IFormFile? formFile) //Testing needed in LR5
+        public async Task<ResponseData<Book>> CreateProductAsync(Book book, IFormFile? formFile)
         {
-            var uri = new Uri(_httpClient.BaseAddress.AbsoluteUri + "Dishes");
+            book.Image = "https://localhost:7002/Images/no-image.jpg";
+            if (formFile != null)
+            {
+                var imageUrl = await _fileService.SaveFileAsync(formFile);
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    book.Image = imageUrl;
+                }
+            }
+
+            var uri = new Uri(_httpClient.BaseAddress.AbsoluteUri + "Books");
             var response = await _httpClient.PostAsJsonAsync(uri, book,_serializerOptions);
             if (response.IsSuccessStatusCode)
             {
@@ -75,8 +82,7 @@ namespace WEB_253502_Melikava.UI.Services.API
              return ResponseData<Book>.Error($"Объект не добавлен. Error: {response.StatusCode.ToString()}");
         }
 
-        //https://localhost:7002/api/Books/17
-        public async Task DeleteProductAsync(int id) //Testing needed in LR5
+        public async Task DeleteProductAsync(int id)
         {
             var url = $"{_httpClient.BaseAddress.AbsoluteUri}Books/{id}";
             var response = await _httpClient.DeleteAsync(url);
@@ -86,17 +92,13 @@ namespace WEB_253502_Melikava.UI.Services.API
             }
         }
 
-        //https://localhost:7002/api/Books/17
-        public async Task<ResponseData<Book>> GetProductByIdAsync(int id) //Testing needed in LR5
+        public async Task<ResponseData<Book>> GetProductByIdAsync(int id)
         {
             var url = $"{_httpClient.BaseAddress.AbsoluteUri}Books/{id}";
-
-            // Выполняем GET запрос
             var response = await _httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)
             {
-                // Возвращаем данные о книге
                 var result = await response.Content.ReadFromJsonAsync<ResponseData<Book>>();
                 return result;
             }
@@ -104,29 +106,25 @@ namespace WEB_253502_Melikava.UI.Services.API
             throw new Exception($"Не удалось получить книгу с ID {id}. Статус: {response.StatusCode}");
         }
 
-        //https://localhost:7002/api/Books/17
-        public async Task UpdateProductAsync(int id, Book product, IFormFile? formFile) //Testing needed in LR5
+        public async Task UpdateProductAsync(int id, Book product, IFormFile? formFile) 
         {
-            var url = $"{_httpClient.BaseAddress.AbsoluteUri}Books/{id}";
-
-            // Подготовка содержимого для отправки в запросе
-            var content = new MultipartFormDataContent();
-
-            // Сериализация объекта книги в JSON и добавление в содержимое запроса
-            var productContent = new StringContent(JsonConvert.SerializeObject(product), Encoding.UTF8, "application/json");
-            content.Add(productContent, "product");
-
-            // Если есть файл, добавляем его в содержимое запроса
             if (formFile != null)
             {
-                var fileStream = formFile.OpenReadStream();
-                content.Add(new StreamContent(fileStream), "file", formFile.FileName);
+                var imageUrl = await _fileService.SaveFileAsync(formFile);
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    var oldImageUrl = product.Image;
+                    await _fileService.DeleteFileAsync(oldImageUrl);
+                    product.Image = imageUrl;
+                    
+                }
             }
+            var url = $"{_httpClient.BaseAddress.AbsoluteUri}Books/{id}";
+            var json = JsonConvert.SerializeObject(product);
+            var contentData = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync(url, contentData);
 
-            // Выполняем PUT запрос для обновления продукта
-            var response = await _httpClient.PutAsync(url, content);
 
-            // Проверяем результат
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Ошибка при обновлении книги с ID {id}. Статус: {response.StatusCode}");

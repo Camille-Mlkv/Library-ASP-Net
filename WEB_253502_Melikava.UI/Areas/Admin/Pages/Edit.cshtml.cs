@@ -22,6 +22,9 @@ namespace WEB_253502_Melikava.UI.Areas.Admin.Pages
         [BindProperty]
         public Book Book { get; set; } = default!;
 
+        [BindProperty]
+        public IFormFile? NewImage { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null)
@@ -45,7 +48,7 @@ namespace WEB_253502_Melikava.UI.Areas.Admin.Pages
                 return Page();
             }
 
-            //_bookService.UpdateProductAsync(id, Book,file);
+            await _bookService.UpdateProductAsync(id, Book, NewImage);
             return RedirectToPage("./Index");
         }
 

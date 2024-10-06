@@ -11,13 +11,18 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Book.Id" />
             <div class="form-group">
                 <label asp-for="Book.Title" class="control-label"></label>
                 <input asp-for="Book.Title" class="form-control" />
                 <span asp-validation-for="Book.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Author" class="control-label"></label>
+                <input asp-for="Book.Author" class="form-control" />
+                <span asp-validation-for="Book.Author" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Book.Description" class="control-label"></label>
@@ -34,16 +39,21 @@
                 <input asp-for="Book.Price" class="form-control" />
                 <span asp-validation-for="Book.Price" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="Book.Image" />
             <div class="form-group">
-                <label asp-for="Book.Image" class="control-label"></label>
-                <input asp-for="Book.Image" class="form-control" />
-                <span asp-validation-for="Book.Image" class="text-danger"></span>
+                <label asp-for="NewImage" class="control-label">New image</label>
+                <input asp-for="NewImage" type="file" class="form-control" />
+                <span asp-validation-for="NewImage" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Book.ImageMimeType" class="control-label"></label>
-                <input asp-for="Book.ImageMimeType" class="form-control" />
-                <span asp-validation-for="Book.ImageMimeType" class="text-danger"></span>
-            </div>
+
+            <!-- Отображение текущего изображения -->
+            @if (!string.IsNullOrEmpty(Model.Book.Image))
+            {
+                <div class="form-group">
+                    <label>Current Image</label>
+                    <img src="@Url.Content(Model.Book.Image)" alt="Current Image" style="max-width: 200px;" />
+                </div>
+            }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

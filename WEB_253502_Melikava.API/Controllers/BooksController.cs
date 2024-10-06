@@ -69,7 +69,7 @@ namespace WEB_253502_Melikava.API.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> PutBook(int id, Book book)
+        public async Task<IActionResult> PutBook(int id,Book book)
         {
             try
             {

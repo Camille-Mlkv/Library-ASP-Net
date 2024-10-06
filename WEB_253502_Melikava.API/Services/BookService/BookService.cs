@@ -118,6 +118,7 @@ namespace WEB_253502_Melikava.API.Services.BookService
 
             existingProduct.Title = product.Title;
             existingProduct.Description = product.Description;
+            existingProduct.Author = product.Author;
             existingProduct.Price = product.Price;
             existingProduct.Image = product.Image;
             existingProduct.GenreId = product.GenreId;
