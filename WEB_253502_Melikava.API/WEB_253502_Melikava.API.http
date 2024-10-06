@@ -1,0 +1,6 @@
+@WEB_253502_Melikava.API_HostAddress = http://localhost:5269
+
+GET {{WEB_253502_Melikava.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

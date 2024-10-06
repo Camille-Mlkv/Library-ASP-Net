@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Лабораторная работа 2";
+}
+@model WEB_253502_Melikava.UI.Models.ViewModels.HomeViewModel
+
+    <h1>@ViewData["Title"]</h1>
+    <h3>Лист</h3>
+    <ol type="A">
+    @for (int i = 0; i < 5; i++)
+    {
+        <li>Element @i</li>
+    }
+    </ol>
+
+    <h3>Форма</h3>
+    <form method="post" asp-controller="Home" asp-action="Index">
+            <div class="col-sm-10">
+                <div class="form-check-group">
+
+                    <div>
+                        <label class="form-label">Select item</label>
+                        <select class="form-select" asp-items="Model.ItemsList" asp-for="SelectedId">
+                            <option value="NOSELECTEDVALUE">--Please select an item--</option>
+                        </select>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="checkbox-1" id="checkbox-1">
+                        <label class="form-check-label" for="checkbox-1">
+                            First checkbox
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="checkbox-2" id="checkbox-2">
+                        <label class="form-check-label" for="checkbox-2">
+                            Second checkbox
+                        </label>
+                    </div>
+
+                    <div class="mt-3">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1">
+                        <label class="form-check-label" for="gridRadios1">
+                            First radio
+                        </label>
+
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                        <label class="form-check-label" for="gridRadios2">
+                            Second radio
+                        </label>
+
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3">
+                        <label class="form-check-label" for="gridRadios3">
+                            Third radio
+                        </label>
+                    </div>
+
+                    <div class="mt-3">
+                        <div class="row mb-3">
+                            <label for="inputLogin" class="col-sm-2 col-form-label">Login</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" name="inputLogin" id="inputLogin">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="inputPaasword" class="col-sm-2 col-form-label">Password</label>
+                            <div class="col-sm-10">
+                            <input type="password" class="form-control" name="inputPassword" id="inputPassword">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+    </form>
+
+@section Scripts{
+    <script src="~/lib/font-awesome/js/all.min.js"></script>
+}
