@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using WEB_253502_Melikava.Domain.Entities;
 using WEB_253502_Melikava.Domain.Models;
+using WEB_253502_Melikava.UI.Services.Authentication;
 using WEB_253502_Melikava.UI.Services.BookService;
 using WEB_253502_Melikava.UI.Services.FileService;
 
@@ -18,7 +19,9 @@ namespace WEB_253502_Melikava.UI.Services.API
         private JsonSerializerOptions _serializerOptions;
         private ILogger<ApiBookService> _logger;
         private readonly IFileService _fileService;
-        public ApiBookService(HttpClient httpClient,IConfiguration configuration, ILogger<ApiBookService> logger,IFileService fileService)
+        private ITokenAccessor _tokenAccessor;
+        public ApiBookService(HttpClient httpClient,IConfiguration configuration, 
+            ILogger<ApiBookService> logger,IFileService fileService,ITokenAccessor tokenAccessor)
         {
             _httpClient = httpClient;
             _pageSize = configuration.GetSection("ItemsPerPage").Value;
@@ -28,6 +31,7 @@ namespace WEB_253502_Melikava.UI.Services.API
             };
             _logger = logger;
             _fileService = fileService;
+            _tokenAccessor = tokenAccessor;
         }
 
         public async Task<ResponseData<BookListModel<Book>>> GetProductListAsync(string? categoryNormalizedName, int pageNo = 1)
@@ -72,6 +76,8 @@ namespace WEB_253502_Melikava.UI.Services.API
             }
 
             var uri = new Uri(_httpClient.BaseAddress.AbsoluteUri + "Books");
+            //set auth header
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             var response = await _httpClient.PostAsJsonAsync(uri, book,_serializerOptions);
             if (response.IsSuccessStatusCode)
             {
@@ -85,6 +91,8 @@ namespace WEB_253502_Melikava.UI.Services.API
         public async Task DeleteProductAsync(int id)
         {
             var url = $"{_httpClient.BaseAddress.AbsoluteUri}Books/{id}";
+            //set auth header
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             var response = await _httpClient.DeleteAsync(url);
             if (!response.IsSuccessStatusCode)
             {
@@ -95,6 +103,8 @@ namespace WEB_253502_Melikava.UI.Services.API
         public async Task<ResponseData<Book>> GetProductByIdAsync(int id)
         {
             var url = $"{_httpClient.BaseAddress.AbsoluteUri}Books/{id}";
+            //set auth header
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             var response = await _httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode)
@@ -122,6 +132,8 @@ namespace WEB_253502_Melikava.UI.Services.API
             var url = $"{_httpClient.BaseAddress.AbsoluteUri}Books/{id}";
             var json = JsonConvert.SerializeObject(product);
             var contentData = new StringContent(json, Encoding.UTF8, "application/json");
+            //set auth header
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             var response = await _httpClient.PutAsync(url, contentData);
 
 

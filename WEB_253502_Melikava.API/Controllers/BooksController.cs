@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,12 +32,14 @@ namespace WEB_253502_Melikava.API.Controllers
             return Ok(await _bookService.GetProductListAsync(genre,pageNo,pageSize));
         }
 
+        [Authorize(Policy ="admin")]
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(Book book)
         {
             return Ok(await _bookService.CreateProductAsync(book));
         }
 
+        [Authorize(Policy = "admin")]
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> DeleteBook(int id)
@@ -59,6 +62,7 @@ namespace WEB_253502_Melikava.API.Controllers
             return Ok(await _bookService.GetProductByIdAsync(id));
         }
 
+        [Authorize(Policy = "admin")]
         [HttpPost]
         [Route("{id:int}/upload-image")]
         public async Task<IActionResult> UploadImage(int id, IFormFile formFile)
@@ -67,6 +71,7 @@ namespace WEB_253502_Melikava.API.Controllers
             
         }
 
+        [Authorize(Policy = "admin")]
         [HttpPut]
         [Route("{id:int}")]
         public async Task<IActionResult> PutBook(int id,Book book)

@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using WEB_253502_Melikava.API.Data;
 using WEB_253502_Melikava.API.Services.BookService;
 using WEB_253502_Melikava.API.Services.GenreService;
+using WEB_253502_Melikava.Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,34 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IGenreService, GenreService>();
 
+var authServer = builder.Configuration
+                        .GetSection("AuthServer")
+                        .Get<AuthServerData>();
+
+// Добавить сервис аутентификации
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
+{
+    // Адрес метаданных конфигурации OpenID
+    o.MetadataAddress = $"{authServer.Host}/realms/{authServer.Realm}/.well-known/openid-configuration";
+    // Authority сервера аутентификации
+    o.Authority = $"{authServer.Host}/realms/{authServer.Realm}";
+    // Audience для токена JWT
+    o.Audience = "account";
+    // Запретить HTTPS для использования локальной версии Keycloak
+    // В рабочем проекте должно быть true
+    o.RequireHttpsMetadata = false;
+});
+
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("admin", p => p.RequireRole("POWER-USER"));
+});
+
+
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,41 +61,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-//ApplyMigration();
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    var context = services.GetRequiredService<AppDbContext>();
 
-//    try
-//    {
-//        // Применение миграций
-//        await context.Database.MigrateAsync();
-
-//        // Вызов SeedData для добавления данных
-//        await DbInitializer.SeedData(app);
-//    }
-//    catch (Exception ex)
-//    {
-//        // Логирование ошибок
-//        var logger = services.GetRequiredService<ILogger<Program>>();
-//        logger.LogError(ex, "An error occurred during seeding the database.");
-//    }
-//}
 app.Run();
 
 
-void ApplyMigration()
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var _db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        if (_db.Database.GetPendingMigrations().Count() > 0)
-        {
-            _db.Database.Migrate();
-        }
-    }
-}
