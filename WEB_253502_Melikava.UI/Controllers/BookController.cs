@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 using WEB_253502_Melikava.Domain.Entities;
 using WEB_253502_Melikava.Domain.Models;
 using WEB_253502_Melikava.UI.Services.BookService;
 using WEB_253502_Melikava.UI.Services.GenreService;
+using WEB_253502_Melikava.UI.Extensions;
 
 namespace WEB_253502_Melikava.UI.Controllers
 {
@@ -29,6 +31,11 @@ namespace WEB_253502_Melikava.UI.Controllers
             if (!bookResponse.Successfull)
             {
                 return NotFound(bookResponse.ErrorMessage);
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_CatalogAsync", bookResponse.Data);
             }
             return View(bookResponse.Data);
         }

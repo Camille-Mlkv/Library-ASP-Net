@@ -41,8 +41,12 @@
     </ul>
 </div>
 
+<div id="data-container">
+    @Html.Partial("_CatalogAsync", Model)
+</div>
 
-<div class="row">
+
+@* <div class="row">
     @foreach(var item in Model.Items)
     {
         var request = ViewContext.HttpContext.Request;
@@ -60,16 +64,14 @@
         </div>
 
     }
-</div>
+</div> *@
 
-<nav aria-label="Page navigation example">
+@* <nav aria-label="Page navigation example">
     <ul class="pagination">
-        <!-- Previous Button -->
         <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
             <a class="page-link" href="@Url.Action("Index", new { pageNo = prev, genre = currentGenre==null?"":currentGenre.NormalizedName })">Previous</a>
         </li>
 
-        <!-- Page Numbers -->
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
             <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
@@ -77,12 +79,19 @@
             </li>
         }
 
-        <!-- Next Button -->
         <li class="page-item @(Model.CurrentPage == Model.TotalPages || Model.TotalPages == 0  ? "disabled" : "")">
             <a class="page-link" href="@Url.Action("Index", new { pageNo = next, genre = currentGenre==null?"":currentGenre.NormalizedName  })">Next</a>
         </li>
     </ul>
-</nav>
+</nav> *@
+
+@* <pager 
+    total-pages="Model.TotalPages" 
+    current-page="Model.CurrentPage"
+    current-genre="currentGenre"
+    admin="false">
+</pager> *@
+
 
 
 

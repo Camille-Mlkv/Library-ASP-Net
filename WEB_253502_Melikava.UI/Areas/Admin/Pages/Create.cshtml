@@ -1,6 +1,7 @@
 ﻿@page
+@using Microsoft.AspNetCore.Authorization
 @model WEB_253502_Melikava.UI.Areas.Admin.Pages.CreateModel
-
+@attribute [Authorize(Policy="admin")]
 @{
     ViewData["Title"] = "Create";
 }

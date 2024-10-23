@@ -21,6 +21,11 @@ builder.Services.AddHttpClient<IFileService, ApiFileService>(opt =>opt.BaseAddre
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
 
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("admin", p => p.RequireRole("POWER-USER"));
+});
+
 var keycloakData = builder.Configuration.GetSection("Keycloak").Get<KeycloakData>();
 builder.Services
 .AddAuthentication(options =>
@@ -65,6 +70,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapRazorPages();
+app.MapRazorPages().RequireAuthorization("admin");
 
 app.Run();

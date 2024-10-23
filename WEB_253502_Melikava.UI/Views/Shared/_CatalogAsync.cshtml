@@ -1,0 +1,32 @@
+﻿@using WEB_253502_Melikava.Domain.Models;
+@model BookListModel<WEB_253502_Melikava.Domain.Entities.Book>
+
+@{
+    var currentGenre = ViewBag.CurrentGenre as Genre;
+}
+
+<div class="row">
+    @foreach (var item in Model.Items)
+    {
+        var request = ViewContext.HttpContext.Request;
+        var returnUrl = request.Path + request.QueryString.ToUriComponent();
+
+        <div class="col-md-4">
+            <div class="card" style="width: 100%;">
+                <img src="@item.Image" class="card-img-top" alt="some image">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Title</h5>
+                    <p class="card-text">@item.Description</p>
+                    <a asp-controller="Cart" asp-action="Add" asp-route-productId="@item.Id" asp-route-returnUrl="@returnUrl" class="btn btn-primary">Add to cart</a>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+<pager total-pages="Model.TotalPages"
+       current-page="Model.CurrentPage"
+       current-genre="currentGenre"
+       admin="false">
+</pager>

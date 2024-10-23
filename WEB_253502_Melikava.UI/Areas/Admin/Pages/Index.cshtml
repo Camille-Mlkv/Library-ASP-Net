@@ -50,7 +50,7 @@
 </table>
 
 <!-- Пагинация -->
-<nav aria-label="Pagination">
+@* <nav aria-label="Pagination">
     <ul class="pagination">
         <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
             <a class="page-link" href="?pageNumber=@(Model.CurrentPage - 1)">Предыдущая</a>
@@ -67,4 +67,8 @@
             <a class="page-link" href="?pageNumber=@(Model.CurrentPage + 1)">Следующая</a>
         </li>
     </ul>
-</nav>
+</nav> *@
+<pager current-page="Model.CurrentPage"
+       total-pages="Model.TotalPages"
+       admin="true">
+</pager>
