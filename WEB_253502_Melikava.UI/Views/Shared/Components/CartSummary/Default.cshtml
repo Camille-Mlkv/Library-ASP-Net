@@ -1,5 +1,5 @@
-﻿@model WEB_253502_Melikava.UI.Models.Cart
+﻿@model WEB_253502_Melikava.Domain.Models.Cart
 
-<a href="#" class="navbar-text ms-auto">
-    @Model.TotalPrice.ToString("C") руб <i class="fa-solid fa-cart-shopping"></i> (@Model.ItemsCount)
+<a asp-controller="Cart" asp-action="Index" class="navbar-text ms-auto">
+    @Model.TotalPrice.ToString("C") руб <i class="fa-solid fa-cart-shopping"></i> (@Model.Count)
 </a>

@@ -75,7 +75,7 @@ namespace WEB_253502_Melikava.UI.TagHelpers
                     var genreName = CurrentGenre == null ? "" : CurrentGenre.NormalizedName;
                     var url = _linkGenerator.GetPathByPage(
                         httpContext: _httpContextAccessor.HttpContext,
-                        page: null,  // Если это Razor Page, можно указать имя страницы, если нужно
+                        page: null,  
                         values: new { pageNo = pageNo, genre = genreName }
                     );
                     a.Attributes["href"] = url;

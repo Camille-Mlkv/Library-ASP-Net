@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using WEB_253502_Melikava.Domain.Models;
 using WEB_253502_Melikava.UI;
 using WEB_253502_Melikava.UI.Extensions;
 using WEB_253502_Melikava.UI.HelperClasses;
+using WEB_253502_Melikava.UI.Services;
 using WEB_253502_Melikava.UI.Services.API;
 using WEB_253502_Melikava.UI.Services.BookService;
 using WEB_253502_Melikava.UI.Services.FileService;
@@ -49,6 +51,18 @@ builder.Services
     options.MetadataAddress =$"{keycloakData.Host}/realms/{keycloakData.Realm}/.well-known/openid-configuration";
 });
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+builder.Services.AddScoped<Cart>(sp =>
+{
+    var session = sp.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.Session;
+    if (session == null)
+    {
+        throw new InvalidOperationException("Session is not available.");
+    }
+    return new SessionCart(session);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -67,9 +81,17 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "library",
+    pattern: "Library/{genre?}",
+    defaults: new { controller = "Book", action = "Index" }
+);
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages().RequireAuthorization("admin");
+
+app.UseSession();
 
 app.Run();
