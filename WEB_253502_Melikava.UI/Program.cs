@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Serilog;
 using WEB_253502_Melikava.Domain.Models;
 using WEB_253502_Melikava.UI;
 using WEB_253502_Melikava.UI.Extensions;
@@ -63,6 +64,11 @@ builder.Services.AddScoped<Cart>(sp =>
     return new SessionCart(session);
 });
 
+
+builder.Host.UseSerilog((ctx, lc) => lc
+    .ReadFrom.Configuration(ctx.Configuration)
+    .Enrich.FromLogContext());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -93,5 +99,6 @@ app.MapControllerRoute(
 app.MapRazorPages().RequireAuthorization("admin");
 
 app.UseSession();
+app.UseMiddleware<ErrorLoggingMiddleware>();
 
 app.Run();

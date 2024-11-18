@@ -19,8 +19,13 @@ namespace WEB_253502_Melikava.UI.Controllers
         }
         public async Task<IActionResult> Index(string? genre, int pageNo = 1)//передаем normalized
         {
-            var genres = (await _genreService.GetGenreListAsync()).Data;
-            var current_genre=genres.FirstOrDefault(g=>g.NormalizedName==genre);
+            var genresResponse = await _genreService.GetGenreListAsync();
+            if (!genresResponse.Successfull)
+            {
+                return NotFound(genresResponse.ErrorMessage);
+            }
+            var genres = genresResponse.Data;
+            var current_genre=genre==null? null: genres.FirstOrDefault(g=>g.NormalizedName==genre);
             ResponseData<BookListModel<Book>> bookResponse = new ResponseData<BookListModel<Book>>();
 
 
