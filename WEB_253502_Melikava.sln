@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253502_Melikava.Domain"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253502_Melikava.API", "WEB_253502_Melikava.API\WEB_253502_Melikava.API.csproj", "{1DA7A229-F726-435D-A013-CB7C58B64D00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEB_253502_Melikava.Tests", "WEB_253502_Melikava.Tests\WEB_253502_Melikava.Tests.csproj", "{DCB27A55-8A89-47FE-8D42-18EB646DCC61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253502_Melikava.Tests", "WEB_253502_Melikava.Tests\WEB_253502_Melikava.Tests.csproj", "{DCB27A55-8A89-47FE-8D42-18EB646DCC61}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253502_Melikava.Blazor.SSR", "WEB_253502_Melikava.Blazor.SSR\WEB_253502_Melikava.Blazor.SSR.csproj", "{2EA5BCBD-764E-41C0-856E-07689334B266}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253502_Melikava.BlazorWasm", "WEB_253502_Melikava.BlazorWasm\WEB_253502_Melikava.BlazorWasm.csproj", "{C98A5764-FBCE-4854-BEF1-2BD0E143B2BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{DCB27A55-8A89-47FE-8D42-18EB646DCC61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCB27A55-8A89-47FE-8D42-18EB646DCC61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCB27A55-8A89-47FE-8D42-18EB646DCC61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EA5BCBD-764E-41C0-856E-07689334B266}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EA5BCBD-764E-41C0-856E-07689334B266}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EA5BCBD-764E-41C0-856E-07689334B266}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EA5BCBD-764E-41C0-856E-07689334B266}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C98A5764-FBCE-4854-BEF1-2BD0E143B2BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C98A5764-FBCE-4854-BEF1-2BD0E143B2BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C98A5764-FBCE-4854-BEF1-2BD0E143B2BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C98A5764-FBCE-4854-BEF1-2BD0E143B2BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

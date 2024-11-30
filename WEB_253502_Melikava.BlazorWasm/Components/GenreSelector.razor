@@ -1,0 +1,67 @@
+﻿@inject IDataService dataService
+@inject NavigationManager navManager
+
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        @selectedGenre
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+        @if (genres == null || !genres.Any())
+        {
+            <li><span class="dropdown-item text-muted">No categories available</span></li>
+        }
+        else
+        {
+            <li>
+                <button class="dropdown-item" @onclick="() => SelectGenre(null)">
+                    Все
+                </button>
+            </li>
+
+            @foreach (var category in genres)
+            {
+                <li>
+                    <button class="dropdown-item" @onclick="() => SelectGenre(category)">
+                        @category.Name
+                    </button>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+@code {
+    private List<Genre>? genres;
+    private string selectedGenre = "Select genre";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await dataService.GetGenreListAsync();
+            genres = dataService.Genres;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading categories: {ex.Message}");
+        }
+    }
+
+    private void SelectGenre(Genre? genre)
+    {
+        if(genre is not null)
+        {
+            selectedGenre = genre.Name;
+            dataService.SelectedGenre = genre;
+            StateHasChanged();
+        }
+        else
+        {
+            selectedGenre = "Все";
+            dataService.SelectedGenre = genre;
+            StateHasChanged();
+        }
+
+        navManager.NavigateTo($"bookCatalog/{selectedGenre}");
+    }
+}

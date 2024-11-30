@@ -1,0 +1,41 @@
+﻿@page "/counter"
+@page "/counter/{CurrentCount:int}"
+@using WEB_253502_Melikava.Blazor.SSR.Models
+@rendermode InteractiveServer // data exchange through websockets
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<EditForm Model="@numberModel" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <InputNumber @bind-Value=@numberModel.Quantity/>
+    <button type="submit">Submit value</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int CurrentCount { get; set; } = 0;
+    private int currentCount = 0;
+    private NumberModel numberModel = new NumberModel();
+
+    protected override void OnParametersSet() //OnInitialized
+    {
+        currentCount = CurrentCount;
+    }
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    private void HandleSubmit()
+    {
+        currentCount = numberModel.Quantity;
+    }
+}

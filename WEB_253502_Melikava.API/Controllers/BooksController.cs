@@ -27,9 +27,11 @@ namespace WEB_253502_Melikava.API.Controllers
         }
 
         [HttpGet]
+       // [Authorize]
         public async Task<ActionResult<ResponseData<List<Book>>>> GetBooks(string? genre,int pageNo = 1,int pageSize = 3)
         {
-            return Ok(await _bookService.GetProductListAsync(genre,pageNo,pageSize));
+            var data = await _bookService.GetProductListAsync(genre, pageNo, pageSize);
+            return Ok(data);
         }
 
         [Authorize(Policy ="admin")]

@@ -1,0 +1,71 @@
+﻿@page "/bookCatalog"
+@page "/bookCatalog/{genre}"
+@using System.Text
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+<h3>BookCatalog</h3>
+
+<GenreSelector/>
+
+ @if (!isLoading)
+{
+    <BookList BookSelected="OnBookSelected"/>
+
+    <Pagination 
+        CurrentPage="dataService.CurrentPage" 
+        TotalPages="dataService.TotalPages"
+        Genre="@NormalizedGenre" />
+}
+
+<DetailedInformation SelectedBook="SelectedBook" />
+
+@code {
+    [Inject]
+    public IDataService dataService { get; set; }
+    private bool isLoading = true;
+
+    [Parameter]
+    public string Genre{ get; set; } //genre basic name
+
+    [Parameter]
+    public string NormalizedGenre { get; set; }
+
+    public Book? SelectedBook { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadBooksAsync();
+    }
+
+    private async Task LoadBooksAsync()
+    {
+        try
+        {
+            isLoading = true; // Устанавливаем флаг загрузки
+            NormalizedGenre = "";
+            if (!string.IsNullOrEmpty(Genre))
+            {
+                if (Genre != "Все")
+                {
+                    NormalizedGenre = dataService.Genres.FirstOrDefault(g => g.Name == Genre)?.NormalizedName;
+                }
+
+            }
+            await dataService.GetBookListAsync(NormalizedGenre);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading books: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false; // Сбрасываем флаг после загрузки
+        }
+    }
+
+    void OnBookSelected(int id)
+    {
+        SelectedBook = dataService.Books.FirstOrDefault(b => b.Id == id);
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,29 @@
+﻿
+
+@if (SelectedBook is not null)
+{
+    <div class="card mb-3" style="max-width: 700px; margin: auto; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <div class="row g-0">
+            <div class="col-md-4">
+                @if (!string.IsNullOrEmpty(SelectedBook.Image))
+                {
+                    <img src="@SelectedBook.Image" class="img-fluid rounded-start" alt="Book Image" style="height: 100%; object-fit: cover;" />
+                }
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@SelectedBook.Title</h5>
+                    <p class="card-text">@SelectedBook.Description</p>
+                    <h5>
+                        <span class="badge bg-secondary">Price: $@SelectedBook.Price</span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+	[Parameter]
+	public Book? SelectedBook { get; set; }
+}

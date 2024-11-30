@@ -47,7 +47,15 @@ builder.Services.AddAuthorization(opt =>
 });
 
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("apiSettings",
+        builder =>
+        {
+            builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+                .SetIsOriginAllowedToAllowWildcardSubdomains();
+        });
+});
 
 
 var app = builder.Build();
@@ -65,6 +73,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("apiSettings");
 
 app.Run();
 
